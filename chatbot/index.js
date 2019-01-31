@@ -11,17 +11,20 @@ const app = express();
 app.use(cors({ origin: true }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-// process.env.DEBUG = 'dialogflow:debug'
-
-function convert(agent) {
-  agent.add('You requested a conversion');
-}
+process.env.DEBUG = 'dialogflow:debug'
 
 app.post('/chatbot/dialogflowFulfillment', (request, response) => {
+  console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
+  console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
+
   const agent = new WebhookClient({ request, response });
   let intentMap = new Map();
 
-  intentMap.set('convert', convert(agent));
+  function convert(agent) {
+    agent.add('You requested a conversion');
+  }
+
+  intentMap.set('convert', convert);
   agent.handleRequest(intentMap);
 });
 
