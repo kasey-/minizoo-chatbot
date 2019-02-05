@@ -1,5 +1,6 @@
 'use strict';
 
+const get = require('lodash.get');
 const yaml = require('js-yaml');
 const fs   = require('fs');
 const cors = require('cors');
@@ -26,17 +27,21 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //process.env.DEBUG = 'dialogflow:debug'
 
 app.post('/chatbot/dialogflowFulfillment', (request, response) => {
-  console.log(`Dialogflow Request headers: ${JSON.stringify(request.headers)}`);
-  console.log(`Dialogflow Request body: ${JSON.stringify(request.body)}`);
+  //console.log(`Dialogflow Request headers: ${JSON.stringify(request.headers)}`);
+  //console.log(`Dialogflow Request body: ${JSON.stringify(request.body)}`);
 
   const agent = new WebhookClient({ request, response });
   let intentMap = new Map();
 
   function convert(agent) {
-    console.log('Convert Agent: ');
-    console.log(agent);
-    const conv = convert(1).from('lb').to('kg');
-    agent.add(`You requested a conversion`);
+    try {
+      const { quantity, from, to } = agent.parameters;
+      const conv = convert(quantity).from(from).to(to);
+      agent.add(`${quantity.toFixed(2)} ${from} in ${to} is ${conv.toFixed(2)}`);
+    } catch(err) {
+      console.log(err);
+      agent.add('Something went wrong with the requested conversion.');
+    }
   }
 
   intentMap.set('convert', convert);
