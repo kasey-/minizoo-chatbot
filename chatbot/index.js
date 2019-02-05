@@ -1,6 +1,5 @@
 'use strict';
 
-const get = require('lodash.get');
 const yaml = require('js-yaml');
 const fs   = require('fs');
 const cors = require('cors');
