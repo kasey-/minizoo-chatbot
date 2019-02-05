@@ -1,22 +1,15 @@
 'use strict';
 
-const yaml = require('js-yaml');
-const fs   = require('fs');
+const nconf = require('nconf');
 const cors = require('cors');
 const express = require('express');
 const bodyParser = require('body-parser');
 const { WebhookClient } = require('dialogflow-fulfillment');
 const convert = require('convert-units');
 
-let config = {
-  port:5000
-};
-
-try {
-  config = yaml.safeLoad(fs.readFileSync('./config.yml', 'utf8'));
-} catch (e) {
-  console.log(e);
-}
+nconf.argv()
+   .env()
+   .file({ file: './config.json' });
 
 const app = express();
 
@@ -47,6 +40,6 @@ app.post('/chatbot/dialogflowFulfillment', (request, response) => {
   agent.handleRequest(intentMap);
 });
 
-app.listen(config.port, () =>
-  console.log(`Fullfillment listening on the port ${config.port}!`),
+app.listen(nconf.get('port'), () =>
+  console.log(`Fullfillment listening on the port ${nconf.get('port')}!`),
 );
