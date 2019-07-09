@@ -27,7 +27,7 @@
     "dialogflow-fulfillment": "^0.6.1",
     "express": "^4.16.4",
     "nconf": "^0.10.0",
-    "snyk": "^1.162.0"
+    "snyk": "^1.192.4"
   },
   "snyk": true
 }
